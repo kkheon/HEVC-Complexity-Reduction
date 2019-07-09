@@ -854,6 +854,11 @@ Void TEncCu::xCompressCU( TComDataCU*& rpcBestCU, TComDataCU*& rpcTempCU, UInt u
         rpcBestCU->getTotalCost()=MAX_DOUBLE;
       }
 
+      // by kkheon : sub-partition RD cost comparision
+      // rpcTempCU is sub-partition? 
+      // how to save? : need a temporal savepoint and load after or just print here. 
+
+
       xCheckBestMode( rpcBestCU, rpcTempCU, uiDepth DEBUG_STRING_PASS_INTO(sDebug) DEBUG_STRING_PASS_INTO(sTempDebug) DEBUG_STRING_PASS_INTO(false) ); // RD compare current larger prediction
                                                                                        // with sub partitioned prediction.
     }

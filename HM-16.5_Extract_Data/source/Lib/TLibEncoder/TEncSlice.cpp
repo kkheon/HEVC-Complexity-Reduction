@@ -814,7 +814,7 @@ Void TEncSlice::compressSlice( TComPic* pcPic, const Bool bCompressEntireSlice )
 	static Int iPOC, iAddr;
 	static FILE * fpCUDepth, *fpPUPartSize, *fpTUDepth, *fpQP;
 	static FILE * fpDataIndex;
-	//static FILE * fpCUDepthText, *fpPUPartSizeText, *fpTUDepthText, *fpQPText;
+	static FILE * fpCUDepthText, *fpPUPartSizeText, *fpTUDepthText, *fpQPText;
 	static TComPicYuv* pcPicYuv;
 	static Int iWidth, iHeight;//, iStride, iCUAddr;
 	static unsigned char * piCUDepthList; // Unit 16¡Á16
@@ -826,9 +826,9 @@ Void TEncSlice::compressSlice( TComPic* pcPic, const Bool bCompressEntireSlice )
 	static char phDateTime[100];
 	static char phInputFile[200];
 	static char phFileNameCUDepth[100], phFileNamePUPartSize[100], phFileNameTUDepth[100], phFileNameQP[100], phFileNameIndex[100];
-	//static char phFileNameCUDepthText[100], phFileNamePUPartSizeText[100], phFileNameQPText[100], phFileNameTUDepthText[100];
+	static char phFileNameCUDepthText[100], phFileNamePUPartSizeText[100], phFileNameQPText[100], phFileNameTUDepthText[100];
 
-	//static bool bPrintPlainText = true;
+	static bool bPrintPlainText = true;
 
 	iPOC = pCtu->getSlice()->getPOC();
 	iAddr = pCtu->getCtuRsAddr();
@@ -860,7 +860,7 @@ Void TEncSlice::compressSlice( TComPic* pcPic, const Bool bCompressEntireSlice )
 		sprintf(phFileNameTUDepth, "Info_%s_TUDepth.dat", phDateTime);
 		sprintf(phFileNameIndex, "Info_%s_Index.dat", phDateTime);
 		sprintf(phFileNameQP, "Info_%s_QP.dat", phDateTime);
-		/*
+		
 		if (bPrintPlainText == true)
 		{
 			sprintf(phFileNameCUDepthText, "Info_%s_CUDepthText.dat", phDateTime);
@@ -868,7 +868,7 @@ Void TEncSlice::compressSlice( TComPic* pcPic, const Bool bCompressEntireSlice )
 			sprintf(phFileNameTUDepthText, "Info_%s_TUDepthText.dat", phDateTime);
 			sprintf(phFileNameQPText, "Info_%s_QPText.dat", phDateTime);
 		}
-		*/
+		
 	}
 	piQPList[iAddr] = pCtu->getQP(0);
 
@@ -924,7 +924,7 @@ Void TEncSlice::compressSlice( TComPic* pcPic, const Bool bCompressEntireSlice )
 		fclose(fpPUPartSize);
 		fclose(fpTUDepth);
 		fclose(fpQP);
-		/*
+		
 		if(bPrintPlainText==true)
 		{
 		//CU
@@ -971,7 +971,7 @@ Void TEncSlice::compressSlice( TComPic* pcPic, const Bool bCompressEntireSlice )
 		}
 		fclose(fpQPText);
 		}
-		*/
+		
 		/*
 		printf("\nPOC=%d\n",iPOC);
 		for(int y=0;y<iHeightInCTU;y++)

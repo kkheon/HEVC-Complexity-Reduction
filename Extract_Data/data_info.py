@@ -230,5 +230,15 @@ YUV_HEIGHT_LIST_FULL = np.ravel(np.concatenate([np.array([[512,1024,1920,3264,51
                                            240*np.ones((1,4)),288*np.ones((1,25)),480*np.ones((1,7)),576*np.ones((1,5)),720*np.ones((1,4)),1080*np.ones((1,24)),1080*np.ones((1,18)),1080*np.ones((1,6)),
                                            360*np.ones((1,59)),1080*np.ones((1,30))], axis = 1)).astype(int)
 
+# temp
+YUV_NAME_LIST_FULL = [
+        'BQTerrace_1920x1080_60_100fr',
+        ]
+YUV_WIDTH_LIST_FULL = np.ravel(np.concatenate([np.array([[1920]]), ], axis = 1)
+                               ).astype(int)
+YUV_HEIGHT_LIST_FULL = np.ravel(np.concatenate([np.array([[1080]]), ], axis = 1)
+                               ).astype(int)
+
+
 assert(len(YUV_NAME_LIST_FULL) == len(YUV_WIDTH_LIST_FULL))
 assert(len(YUV_NAME_LIST_FULL) == len(YUV_HEIGHT_LIST_FULL))
