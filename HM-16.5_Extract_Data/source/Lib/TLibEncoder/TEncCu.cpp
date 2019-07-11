@@ -857,10 +857,36 @@ Void TEncCu::xCompressCU( TComDataCU*& rpcBestCU, TComDataCU*& rpcTempCU, UInt u
       // by kkheon : sub-partition RD cost comparision
       // rpcTempCU is sub-partition? 
       // how to save? : need a temporal savepoint and load after or just print here. 
+#if TRACE_RD
+      //const PredMode predMode=rpcTempCU->getPredictionMode(0);
 
+      //fprintf( g_hTraceRD, "POC=%d ", rpcTempCU->getSlice()->getPOC());
+      //fprintf( g_hTraceRD, "Addr=%d ", rpcTempCU->getCtuRsAddr());
+      //fprintf( g_hTraceRD, "Depth=%d ", uiDepth);
+      //fprintf( g_hTraceRD, "%s ", (predMode==MODE_INTRA?"Intra   ":"Inter   "));
+      //fprintf( g_hTraceRD, "%s ",  partSizeToString[rpcTempCU->getPartitionSize(0)]);
+      //fprintf( g_hTraceRD, "CU at %d, %d ", rpcBestCU->getCUPelX() , rpcBestCU->getCUPelY());
+      //fprintf( g_hTraceRD, "width=%d ", UInt(rpcBestCU->getWidth(0)));
+      //fprintf( g_hTraceRD, "cost=%f, %f ", rpcBestCU->getTotalCost(), rpcTempCU->getTotalCost());
+      //fprintf( g_hTraceRD, "\n");
+      //fflush ( g_hTraceRD );
+
+      //TComDataCU* pCtu = pcPic->getCtu( rpcTempCU->getCtuRsAddr() );
+      //Double best_cost_no_split  = pCtu->getTotalCostSplit(uiDepth, rpcBestCU->getZorderIdxInCtu()/4, 0);
+      //Double best_cost_split     = pCtu->getTotalCostSplit(uiDepth, rpcBestCU->getZorderIdxInCtu()/4, 1);
+
+      //Double temp_cost_no_split  = pCtu->getTotalCostSplit(uiDepth, rpcTempCU->getZorderIdxInCtu()/4, 0);
+      //Double temp_cost_split     = pCtu->getTotalCostSplit(uiDepth, rpcTempCU->getZorderIdxInCtu()/4, 1);
+
+      //fprintf( g_hTraceRD, "[no-split] cost=%f, %f ", best_cost_no_split, best_cost_split);
+      //fprintf( g_hTraceRD, "[split] cost=%f, %f ", temp_cost_no_split, temp_cost_split);
+
+      // save to ctu of pic
+      rpcBestCU->saveRDToPic(uiDepth, 0); // save no-split cost
+      rpcTempCU->saveRDToPic(uiDepth, 1); // save split cost
+#endif
 
       xCheckBestMode( rpcBestCU, rpcTempCU, uiDepth DEBUG_STRING_PASS_INTO(sDebug) DEBUG_STRING_PASS_INTO(sTempDebug) DEBUG_STRING_PASS_INTO(false) ); // RD compare current larger prediction
-                                                                                       // with sub partitioned prediction.
     }
   }
 

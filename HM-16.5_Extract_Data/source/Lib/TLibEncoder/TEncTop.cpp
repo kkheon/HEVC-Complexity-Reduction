@@ -66,6 +66,22 @@ TEncTop::TEncTop()
   g_bJustDoIt = g_bEncDecTraceDisable;
   g_nSymbolCounter = 0;
 #endif
+//#if TRACE_RD
+//  if (g_hTraceRD == NULL)
+//  {
+//	  static char phDateTime[100];
+//	  static char phInputFile[200];
+//	  static char phFileNameRD[100];
+//		FILE * fpYuvNameTemp = fopen("YuvNameTemp.dat", "r+");
+//		assert(fscanf(fpYuvNameTemp, "%s\n%s", phInputFile, phDateTime)>=0);
+//		fclose(fpYuvNameTemp);
+//
+//    sprintf(phFileNameRD, "Info_%s_RD.dat", phDateTime);
+//
+//    g_hTraceRD = fopen(phFileNameRD, "w" );
+//  }
+//#endif
+
 
   m_iMaxRefPicNum     = 0;
 
@@ -82,6 +98,13 @@ TEncTop::~TEncTop()
     fclose( g_hTrace );
   }
 #endif
+//#if TRACE_RD
+//  if (g_hTraceRD != stdout)
+//  {
+//    fclose( g_hTraceRD );
+//  }
+//#endif
+
 }
 
 Void TEncTop::create ()
@@ -174,6 +197,13 @@ Void TEncTop::destroy ()
   // destroy ROM
   destroyROM();
 
+#if TRACE_RD
+  if (g_hTraceRD != stdout)
+  {
+    fclose( g_hTraceRD );
+  }
+#endif
+
   return;
 }
 
@@ -218,6 +248,22 @@ Void TEncTop::init(Bool isFieldCoding)
   m_iMaxRefPicNum = 0;
 
   xInitScalingLists();
+
+#if TRACE_RD
+  if (g_hTraceRD == NULL)
+  {
+	  static char phDateTime[100];
+	  static char phInputFile[200];
+	  static char phFileNameRD[100];
+		FILE * fpYuvNameTemp = fopen("YuvNameTemp.dat", "r+");
+		assert(fscanf(fpYuvNameTemp, "%s\n%s", phInputFile, phDateTime)>=0);
+		fclose(fpYuvNameTemp);
+
+    sprintf(phFileNameRD, "Info_%s_Trace.dat", phDateTime);
+
+    g_hTraceRD = fopen(phFileNameRD, "w" );
+  }
+#endif
 }
 
 Void TEncTop::xInitScalingLists()

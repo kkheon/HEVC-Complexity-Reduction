@@ -109,6 +109,14 @@ private:
 #endif
 
   Pel*           m_pcIPCMSample[MAX_NUM_COMPONENT];    ///< PCM sample buffer (0->Y, 1->Cb, 2->Cr)
+  
+#if TRACE_RD
+  Double         m_dTotalCostSplit[3][16][2];         /// 3: depth, 32 part index, 2 split-costs (0 : no split, 1 : split)
+
+  //Double*        m_dTotalCostSplit_depth_0[2];         ///< 0 : split before, 1 : split after
+  //Double*        m_dTotalCostSplit_depth_1[2];         ///< 0 : split before, 1 : split after
+  //Double*        m_dTotalCostSplit_depth_2[2];         ///< 0 : split before, 1 : split after
+#endif
 
   // -------------------------------------------------------------------------------------------------------------------
   // neighbour access variables
@@ -190,7 +198,9 @@ public:
   Void          copyPartFrom          ( TComDataCU* pcCU, UInt uiPartUnitIdx, UInt uiDepth );
 
   Void          copyToPic             ( UChar uiDepth );
-
+#if TRACE_RD
+  Void          saveRDToPic           ( UChar uhDepth, UInt uSplit );
+#endif
   // -------------------------------------------------------------------------------------------------------------------
   // member functions for CU description
   // -------------------------------------------------------------------------------------------------------------------
@@ -467,6 +477,11 @@ public:
   UInt&         getTotalNumPart()               { return m_uiNumPartition;    }
 
   UInt          getCoefScanIdx(const UInt uiAbsPartIdx, const UInt uiWidth, const UInt uiHeight, const ComponentID compID) const ;
+
+#if TRACE_RD
+  Double        getTotalCostSplit(UChar uhDepth, UInt uiAddr, UInt uSplit)   { return m_dTotalCostSplit[uhDepth][uiAddr][uSplit]; }
+  Void          setTotalCostSplit(UChar uhDepth, UInt uiAddr, UInt uSplit, Double Cost)   { m_dTotalCostSplit[uhDepth][uiAddr][uSplit] = Cost; }
+#endif
 
 };
 

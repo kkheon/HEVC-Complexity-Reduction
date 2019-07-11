@@ -101,6 +101,22 @@ TComDataCU::TComDataCU()
   }
 
   m_bDecSubCu          = false;
+
+#if TRACE_RD
+  for(UInt i=0; i<3; i++)
+    for(UInt j=0; j<16; j++)
+      for(UInt k=0; k<2; k++)
+        m_dTotalCostSplit[i][j][k] = 0;         /// 3: depth, 32 part index, 2 split-costs (0 : no split, 1 : split)
+
+  //for(UInt i=0; i<2; i++)
+  //{
+  //  m_dTotalCostSplit_depth_0[i] = NULL;         
+  //  m_dTotalCostSplit_depth_1[i] = NULL;         
+  //  m_dTotalCostSplit_depth_2[i] = NULL;         
+  //}
+#endif
+
+
 }
 
 TComDataCU::~TComDataCU()
@@ -209,6 +225,14 @@ Void TComDataCU::create( ChromaFormat chromaFormatIDC, UInt uiNumPartition, UInt
   {
     m_apcCUColocated[i]  = NULL;
   }
+//#if TRACE_RD
+//  for(UInt i=0; i<2; i++)
+//  {
+//    m_dTotalCostSplit_depth_0[i] = xMalloc(Double,  uiNumPartition);
+//    m_dTotalCostSplit_depth_1[i] = xMalloc(Double,  uiNumPartition);
+//    m_dTotalCostSplit_depth_2[i] = xMalloc(Double,  uiNumPartition);
+//  }
+//#endif
 }
 
 Void TComDataCU::destroy()
@@ -362,6 +386,28 @@ Void TComDataCU::destroy()
       const RefPicList rpl=RefPicList(i);
       m_acCUMvField[rpl].destroy();
     }
+
+//#if TRACE_RD
+//    for(UInt i=0; i<2; i++)
+//    {
+//      if ( m_dTotalCostSplit_depth_0[i] )
+//      {
+//        xFree(m_dTotalCostSplit_depth_0[i]);
+//        m_dTotalCostSplit_depth_0[i] = NULL;
+//      }
+//      if ( m_dTotalCostSplit_depth_1[i] )
+//      {
+//        xFree(m_dTotalCostSplit_depth_1[i]);
+//        m_dTotalCostSplit_depth_1[i] = NULL;
+//      }
+//      if ( m_dTotalCostSplit_depth_2[i] )
+//      {
+//        xFree(m_dTotalCostSplit_depth_2[i]);
+//        m_dTotalCostSplit_depth_2[i] = NULL;
+//      }
+//    }
+//#endif
+
   }
 
   m_pcPic              = NULL;
@@ -537,6 +583,15 @@ Void TComDataCU::initCtu( TComPic* pcPic, UInt ctuRsAddr )
       m_apcCUColocated[rpl] = getSlice()->getRefPic( rpl, 0)->getCtu( m_ctuRsAddr );
     }
   }
+//#if TRACE_RD
+//  for(UInt i=0; i<2; i++)
+//  {
+//    memset( m_dTotalCostSplit_depth_0[i], 0, m_uiNumPartition * sizeof( *m_dTotalCostSplit_depth_0[i]) );
+//    memset( m_dTotalCostSplit_depth_1[i], 0, m_uiNumPartition * sizeof( *m_dTotalCostSplit_depth_1[i]) );
+//    memset( m_dTotalCostSplit_depth_2[i], 0, m_uiNumPartition * sizeof( *m_dTotalCostSplit_depth_2[i]) );
+//  }
+//#endif
+
 }
 
 
@@ -1016,6 +1071,18 @@ Void TComDataCU::copyToPic( UChar uhDepth )
 
   pCtu->getTotalBins() = m_uiTotalBins;
 }
+
+#if TRACE_RD
+Void TComDataCU::saveRDToPic( UChar uhDepth, UInt uSplit )
+{
+  TComDataCU* pCtu = m_pcPic->getCtu( m_ctuRsAddr );
+  //UInt uiAbsZorderCUIdx   = g_auiZscanToRaster[m_absZIdxInCtu];
+  UInt absZIdxInCtu_in_block = m_absZIdxInCtu / 16;
+
+  //m_dTotalCostSplit[uhDepth][absZIdxInCtu_in_block][uSplit] = m_dTotalCost;
+  pCtu->setTotalCostSplit(uhDepth, absZIdxInCtu_in_block, uSplit, m_dTotalCost);
+}
+#endif
 
 // --------------------------------------------------------------------------------------------------------------------
 // Other public functions

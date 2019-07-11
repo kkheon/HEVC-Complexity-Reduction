@@ -48,8 +48,9 @@
 
 #if DEBUG_STRING
 extern const Char *debug_reorder_data_inter_token[MAX_NUM_COMPONENT+1];
-extern const Char *partSizeToString[NUMBER_OF_PART_SIZES];
+//extern const Char *partSizeToString[NUMBER_OF_PART_SIZES];
 #endif
+extern const Char *partSizeToString[NUMBER_OF_PART_SIZES];
 
 // ---------------------------------------------------------------------------------------------- //
 

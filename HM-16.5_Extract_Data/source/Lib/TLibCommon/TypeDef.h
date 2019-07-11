@@ -74,6 +74,10 @@
 
 #define PRINT_RPS_INFO                                    0 ///< Enable/disable the printing of bits used to send the RPS.
 
+#ifndef TRACE_RD
+#define TRACE_RD                                        1
+#endif
+
 // ====================================================================================================================
 // Tool Switches - transitory (these macros are likely to be removed in future revisions)
 // ====================================================================================================================

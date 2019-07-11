@@ -579,6 +579,10 @@ Bool   g_HLSTraceEnable = true;
 Bool   g_bJustDoIt = false;
 UInt64 g_nSymbolCounter = 0;
 #endif
+#if TRACE_RD
+FILE*  g_hTraceRD = NULL; // Set to NULL to open up a file. Set to stdout to use the current output
+#endif
+
 // ====================================================================================================================
 // Scanning order & context model mapping
 // ====================================================================================================================

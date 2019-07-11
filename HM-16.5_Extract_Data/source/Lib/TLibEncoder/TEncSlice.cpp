@@ -768,7 +768,7 @@ Void TEncSlice::compressSlice( TComPic* pcPic, const Bool bCompressEntireSlice )
 
     Double oldLambda = m_pcRdCost->getLambda();
     if ( m_pcCfg->getUseRateCtrl() )
-    {
+    {/*{{{*/
       Int estQP        = pcSlice->getSliceQp();
       Double estLambda = -1.0;
       Double bpp       = -1.0;
@@ -808,7 +808,7 @@ Void TEncSlice::compressSlice( TComPic* pcPic, const Bool bCompressEntireSlice )
 #if ADAPTIVE_QP_SELECTION
       pCtu->getSlice()->setSliceQpBase( estQP );
 #endif
-    }
+    }/*}}}*/
 
 	// 20170111 added
 	static Int iPOC, iAddr;
@@ -827,6 +827,10 @@ Void TEncSlice::compressSlice( TComPic* pcPic, const Bool bCompressEntireSlice )
 	static char phInputFile[200];
 	static char phFileNameCUDepth[100], phFileNamePUPartSize[100], phFileNameTUDepth[100], phFileNameQP[100], phFileNameIndex[100];
 	static char phFileNameCUDepthText[100], phFileNamePUPartSizeText[100], phFileNameQPText[100], phFileNameTUDepthText[100];
+#if TRACE_RD
+	static FILE *fpRD, *fpRDText;
+	static char phFileNameRD[100], phFileNameRDText[100];
+#endif
 
 	static bool bPrintPlainText = true;
 
@@ -861,12 +865,18 @@ Void TEncSlice::compressSlice( TComPic* pcPic, const Bool bCompressEntireSlice )
 		sprintf(phFileNameIndex, "Info_%s_Index.dat", phDateTime);
 		sprintf(phFileNameQP, "Info_%s_QP.dat", phDateTime);
 		
+#if TRACE_RD
+    sprintf(phFileNameRD, "Info_%s_RD.dat", phDateTime);
+#endif
 		if (bPrintPlainText == true)
 		{
 			sprintf(phFileNameCUDepthText, "Info_%s_CUDepthText.dat", phDateTime);
 			sprintf(phFileNamePUPartSizeText, "Info_%s_PUPartSizeText.dat", phDateTime);
 			sprintf(phFileNameTUDepthText, "Info_%s_TUDepthText.dat", phDateTime);
 			sprintf(phFileNameQPText, "Info_%s_QPText.dat", phDateTime);
+#if TRACE_RD
+			sprintf(phFileNameRDText, "Info_%s_RDText.dat", phDateTime);
+#endif
 		}
 		
 	}
@@ -971,7 +981,8 @@ Void TEncSlice::compressSlice( TComPic* pcPic, const Bool bCompressEntireSlice )
 		}
 		fclose(fpQPText);
 		}
-		
+
+	
 		/*
 		printf("\nPOC=%d\n",iPOC);
 		for(int y=0;y<iHeightInCTU;y++)
@@ -983,6 +994,119 @@ Void TEncSlice::compressSlice( TComPic* pcPic, const Bool bCompressEntireSlice )
 		*/
 	}
 	// 20170111 end
+  //
+#if TRACE_RD
+  fpRD=fopen(phFileNameRD,"a+");
+
+  Double cost_no_split;
+  Double cost_split;
+  Double diff;
+  Double diff_norm;
+
+  Double cost_no_split_root  = pCtu->getTotalCostSplit(0, 0, 0);
+  if( cost_no_split_root == 0)
+    cost_no_split_root = 1;
+
+	//if (iPOC == 0 && iAddr == 0)
+	//if (iAddr == 0)
+  //{
+  // depth 0 vs 1
+  cost_no_split  = pCtu->getTotalCostSplit(0, 0, 0);
+  cost_split     = pCtu->getTotalCostSplit(0, 0, 1);
+  diff = cost_no_split - cost_split;
+  diff_norm = diff / cost_no_split_root * 100;
+  fwrite(&diff_norm, sizeof(double), 1, fpRD);
+  //}
+
+  // depth 1 vs 2
+  for (int y = 0; y<16; y+=4)
+  {
+    cost_no_split  = pCtu->getTotalCostSplit(1, y, 0);
+    cost_split     = pCtu->getTotalCostSplit(1, y, 1);
+    diff = cost_no_split - cost_split;
+    diff_norm = diff / cost_no_split_root * 100;
+
+    fwrite(&diff_norm, sizeof(double), 1, fpRD);
+  }
+  // depth 2 vs 3
+  for (int y = 0; y<16; y++)
+  {
+    cost_no_split  = pCtu->getTotalCostSplit(2, y, 0);
+    cost_split     = pCtu->getTotalCostSplit(2, y, 1);
+    diff = cost_no_split - cost_split;
+    diff_norm = diff / cost_no_split_root * 100;
+
+    fwrite(&diff_norm, sizeof(double), 1, fpRD);
+  }
+
+  fclose(fpRD);
+
+  if(bPrintPlainText==true)
+  {
+    fpRDText=fopen(phFileNameRDText,"a+");
+
+    fprintf(fpRDText,"POC = %d, addr = %d ", iPOC, iAddr);
+    //Double cost_no_split_root  = pCtu->getTotalCostSplit(0, 0, 0);
+    //if( cost_no_split_root == 0)
+    //  cost_no_split_root = 1;
+
+    //Double cost_no_split;
+    //Double cost_split;
+    //Double diff;
+    //Double diff_norm;
+
+    for (int x = 0; x<1; x++)
+      for (int y = 0; y<1; y++)
+      {
+        cost_no_split  = pCtu->getTotalCostSplit(x, y, 0);
+        cost_split     = pCtu->getTotalCostSplit(x, y, 1);
+        fprintf(fpRDText,"[cost] depth = %d, index = %d ", x, y);
+        fprintf(fpRDText,"no_split = %f ",cost_no_split);
+        fprintf(fpRDText,"split = %f ",cost_split);
+
+        diff = cost_no_split - cost_split;
+        diff_norm = diff / cost_no_split_root * 100;
+
+        fprintf(fpRDText,"diff = %f ", diff);
+        fprintf(fpRDText,"diff_norm = %f ", diff_norm);
+        fprintf(fpRDText,"\n");
+      }
+    for (int x = 1; x<2; x++)
+      for (int y = 0; y<16; y+=4)
+      {
+        cost_no_split  = pCtu->getTotalCostSplit(x, y, 0);
+        cost_split     = pCtu->getTotalCostSplit(x, y, 1);
+        fprintf(fpRDText,"[cost] depth = %d, index = %d ", x, y);
+        fprintf(fpRDText,"no_split = %f ",cost_no_split);
+        fprintf(fpRDText,"split = %f ",cost_split);
+
+        diff = cost_no_split - cost_split;
+        diff_norm = diff / cost_no_split_root * 100;
+
+        fprintf(fpRDText,"diff = %f ", diff);
+        fprintf(fpRDText,"diff_norm = %f ", diff_norm);
+        fprintf(fpRDText,"\n");
+      }
+    for (int x = 2; x<3; x++)
+      for (int y = 0; y<16; y++)
+      {
+        cost_no_split  = pCtu->getTotalCostSplit(x, y, 0);
+        cost_split     = pCtu->getTotalCostSplit(x, y, 1);
+        fprintf(fpRDText,"[cost] depth = %d, index = %d ", x, y);
+        fprintf(fpRDText,"no_split = %f ",cost_no_split);
+        fprintf(fpRDText,"split = %f ",cost_split);
+
+        diff = cost_no_split - cost_split;
+        diff_norm = diff / cost_no_split_root * 100;
+
+        fprintf(fpRDText,"diff = %f ", diff);
+        fprintf(fpRDText,"diff_norm = %f ", diff_norm);
+        fprintf(fpRDText,"\n");
+      }
+    fclose(fpRDText);
+  }
+#endif
+	
 
     
 

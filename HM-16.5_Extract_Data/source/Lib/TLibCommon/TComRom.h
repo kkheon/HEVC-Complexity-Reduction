@@ -157,6 +157,9 @@ extern UInt64 g_nSymbolCounter;
 #define DTRACE_CABAC_N
 
 #endif
+#if TRACE_RD
+extern FILE*  g_hTraceRD;
+#endif
 
 const Char* nalUnitTypeToString(NalUnitType type);
 
