@@ -859,24 +859,46 @@ Void TEncSlice::compressSlice( TComPic* pcPic, const Bool bCompressEntireSlice )
 		assert(fscanf(fpYuvNameTemp, "%s\n%s", phInputFile, phDateTime)>=0);
 		fclose(fpYuvNameTemp);
 
-		sprintf(phFileNameCUDepth, "Info_%s_CUDepth.dat", phDateTime);
-		sprintf(phFileNamePUPartSize, "Info_%s_PUPartSize.dat", phDateTime);
-		sprintf(phFileNameTUDepth, "Info_%s_TUDepth.dat", phDateTime);
-		sprintf(phFileNameIndex, "Info_%s_Index.dat", phDateTime);
-		sprintf(phFileNameQP, "Info_%s_QP.dat", phDateTime);
+//    // filename using Time
+//		sprintf(phFileNameCUDepth, "Info_%s_CUDepth.dat", phDateTime);
+//		sprintf(phFileNamePUPartSize, "Info_%s_PUPartSize.dat", phDateTime);
+//		sprintf(phFileNameTUDepth, "Info_%s_TUDepth.dat", phDateTime);
+//		sprintf(phFileNameIndex, "Info_%s_Index.dat", phDateTime);
+//		sprintf(phFileNameQP, "Info_%s_QP.dat", phDateTime);
+//		
+//#if TRACE_RD
+//    sprintf(phFileNameRD, "Info_%s_RD.dat", phDateTime);
+//#endif
+//		if (bPrintPlainText == true)
+//		{
+//			sprintf(phFileNameCUDepthText, "Info_%s_CUDepthText.dat", phDateTime);
+//			sprintf(phFileNamePUPartSizeText, "Info_%s_PUPartSizeText.dat", phDateTime);
+//			sprintf(phFileNameTUDepthText, "Info_%s_TUDepthText.dat", phDateTime);
+//			sprintf(phFileNameQPText, "Info_%s_QPText.dat", phDateTime);
+//#if TRACE_RD
+//			sprintf(phFileNameRDText, "Info_%s_RDText.dat", phDateTime);
+//#endif
+
+    // filename using input file
+		sprintf(phFileNameCUDepth, "Info_%s_CUDepth.dat", phInputFile);
+		sprintf(phFileNamePUPartSize, "Info_%s_PUPartSize.dat", phInputFile);
+		sprintf(phFileNameTUDepth, "Info_%s_TUDepth.dat", phInputFile);
+		sprintf(phFileNameIndex, "Info_%s_Index.dat", phInputFile);
+		sprintf(phFileNameQP, "Info_%s_QP.dat", phInputFile);
 		
 #if TRACE_RD
-    sprintf(phFileNameRD, "Info_%s_RD.dat", phDateTime);
+    sprintf(phFileNameRD, "Info_%s_RD.dat", phInputFile);
 #endif
 		if (bPrintPlainText == true)
 		{
-			sprintf(phFileNameCUDepthText, "Info_%s_CUDepthText.dat", phDateTime);
-			sprintf(phFileNamePUPartSizeText, "Info_%s_PUPartSizeText.dat", phDateTime);
-			sprintf(phFileNameTUDepthText, "Info_%s_TUDepthText.dat", phDateTime);
-			sprintf(phFileNameQPText, "Info_%s_QPText.dat", phDateTime);
+			sprintf(phFileNameCUDepthText, "Info_%s_CUDepthText.dat", phInputFile);
+			sprintf(phFileNamePUPartSizeText, "Info_%s_PUPartSizeText.dat", phInputFile);
+			sprintf(phFileNameTUDepthText, "Info_%s_TUDepthText.dat", phInputFile);
+			sprintf(phFileNameQPText, "Info_%s_QPText.dat", phInputFile);
 #if TRACE_RD
-			sprintf(phFileNameRDText, "Info_%s_RDText.dat", phDateTime);
+			sprintf(phFileNameRDText, "Info_%s_RDText.dat", phInputFile);
 #endif
+
 		}
 		
 	}

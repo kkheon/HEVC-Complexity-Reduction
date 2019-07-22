@@ -2315,7 +2315,16 @@ Void TAppEncCfg::xPrintParameter()
 	// 把YUV文件名（含路径）保存到文件中
 	// 20170113 added
 	FILE * fpYuvNameTemp = fopen("YuvNameTemp.dat", "w+");
-	fprintf(fpYuvNameTemp, "%s", m_pchInputFile);
+
+	//fprintf(fpYuvNameTemp, "%s", m_pchInputFile);
+
+  // split
+  std::string inputfile(m_pchInputFile);
+  std::vector<std::string> v_file = split(inputfile, '/');
+  std::string str_file = v_file.back();
+  std::vector<std::string> v_filename = split(str_file, '.');
+  std::string str_filename = v_filename.front();
+	fprintf(fpYuvNameTemp, "%s", str_filename.c_str());
 	fprintf(fpYuvNameTemp, "\n");
 
 	char phDataTime[100];

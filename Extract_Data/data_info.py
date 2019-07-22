@@ -231,14 +231,21 @@ YUV_HEIGHT_LIST_FULL = np.ravel(np.concatenate([np.array([[512,1024,1920,3264,51
                                            360*np.ones((1,59)),1080*np.ones((1,30))], axis = 1)).astype(int)
 
 # temp
-YUV_NAME_LIST_FULL = [
-        'BQTerrace_1920x1080_60_100fr',
-        ]
-YUV_WIDTH_LIST_FULL = np.ravel(np.concatenate([np.array([[1920]]), ], axis = 1)
-                               ).astype(int)
-YUV_HEIGHT_LIST_FULL = np.ravel(np.concatenate([np.array([[1080]]), ], axis = 1)
-                               ).astype(int)
+#YUV_NAME_LIST_FULL = [
+#        'ParkScene_1920x1080_24_100fr',
+#        ]
+#YUV_WIDTH_LIST_FULL = np.ravel(np.concatenate([np.array([[1920]]), ], axis=1)
+#                               ).astype(int)
+#YUV_HEIGHT_LIST_FULL = np.ravel(np.concatenate([np.array([[1080]]), ], axis=1)
+#                               ).astype(int)
 
+YUV_NAME_LIST_FULL = [
+        'IntraTrain_768x512',
+        ]
+YUV_WIDTH_LIST_FULL = np.ravel(np.concatenate([np.array([[768]]), ], axis=1)
+                               ).astype(int)
+YUV_HEIGHT_LIST_FULL = np.ravel(np.concatenate([np.array([[512]]), ], axis=1)
+                               ).astype(int)
 
 assert(len(YUV_NAME_LIST_FULL) == len(YUV_WIDTH_LIST_FULL))
 assert(len(YUV_NAME_LIST_FULL) == len(YUV_HEIGHT_LIST_FULL))

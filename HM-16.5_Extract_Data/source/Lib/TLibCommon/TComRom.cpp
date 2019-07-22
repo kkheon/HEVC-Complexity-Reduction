@@ -696,4 +696,15 @@ const Int g_quantInterDefault8x8[8*8] =
 const UInt g_scalingListSize   [SCALING_LIST_SIZE_NUM] = {16,64,256,1024};
 const UInt g_scalingListSizeX  [SCALING_LIST_SIZE_NUM] = { 4, 8, 16,  32};
 
+std::vector<std::string> split(const std::string &s, char delim) {
+    std::vector<string> elems;
+    std::stringstream ss(s);
+    std::string number;
+    while(std::getline(ss, number, delim)) {
+        //elems.push_back(std::stoi(number));
+        elems.push_back(number);
+    }
+    return elems;
+}
+
 //! \}

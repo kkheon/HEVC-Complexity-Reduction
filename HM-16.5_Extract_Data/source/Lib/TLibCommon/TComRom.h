@@ -172,6 +172,9 @@ extern const Int g_quantInterDefault8x8[8*8];
 
 extern const UInt g_scalingListSize [SCALING_LIST_SIZE_NUM];
 extern const UInt g_scalingListSizeX[SCALING_LIST_SIZE_NUM];
+
+std::vector<std::string> split(const std::string &s, char delim);
+
 //! \}
 
 #endif  //__TCOMROM__
